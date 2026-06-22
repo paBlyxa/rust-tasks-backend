@@ -1,0 +1,21 @@
+[package]
+name = "tasks_backend"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+axum = "0.8"
+tokio = { version = "1.0", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tower-http = { version = "0.7", features = ["cors", "trace"] }
+sqlx = { version = "0.9", features = ["runtime-tokio", "postgres", "macros", "chrono", "uuid"] }
+uuid = { version = "1.0", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+jsonwebtoken = { version = "10", features = ["rust_crypto"] }
+bcrypt = "0.19"
+dotenvy = "0.15"
+validator = { version = "0.20", features = ["derive"] }
+
+[dev-dependencies]
+reqwest = { version = "0.13", features = ["json"] }
