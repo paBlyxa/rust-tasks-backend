@@ -128,7 +128,12 @@ jobs:
       - name: Extract coverage percentage
         id: coverage
         run: |
-          PCT=$(jq '.coverage' coverage/tarpaulin-report.json)
+          REPORT_FILE=$(find coverage -maxdepth 1 -name '*-coverage.json' | head -n1)
+          if [ -z "$REPORT_FILE" ]; then
+            echo "No tarpaulin JSON report found in coverage/"; ls -la coverage/; exit 1
+          fi
+          echo "Using $REPORT_FILE"
+          PCT=$(jq '.coverage' "$REPORT_FILE")
           PCT_ROUNDED=$(printf "%.1f" "$PCT")
           echo "percentage=$PCT_ROUNDED" >> "$GITHUB_OUTPUT"
       - name: Pick bage color
