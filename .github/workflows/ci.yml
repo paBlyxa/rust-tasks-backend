@@ -6,30 +6,30 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-     - uses: actions/checkout@v4
-     - uses: dtolnay/rust-toolchain@stable
-     - run: cargo test --all-features
-      
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo test --all-features
+
   clippy:
     runs-on: ubuntu-latest
     steps:
-     - uses: actions/checkout@v4
-     - uses: dtolnay/rust-toolchain@stable
-       with:
-         components: clippy
-     - run: cargo clippy -- -D warnings
-      
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - run: cargo clippy -- -D warnings
+
   format:
     runs-on: ubuntu-latest
     steps:
-     - uses: actions/checkout@v4
-     - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt
-     - run: cargo fmt --check
-      
+      - run: cargo fmt --check
+
   audit:
     runs-on: ubuntu-latest
     steps:
-     - uses: actions/checkout@v4
-     - uses: rustsec/audit-check@v2
+      - uses: actions/checkout@v4
+      - uses: rustsec/audit-check@v2
