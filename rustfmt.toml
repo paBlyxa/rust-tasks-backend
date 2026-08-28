@@ -1,0 +1,20 @@
+# Rust edition your project targets (should match Cargo.toml)
+edition = "2024"
+
+# Max width of each line
+max_width = 100
+
+# Number of spaces per indentation level
+tab_spaces = 4
+
+# Use small heuristics to decide when to put struct/fn args on one line
+use_small_heuristics = "Default"
+
+# Reorder `use` statements alphabetically
+reorder_imports = true
+
+# Use field init shorthand (`Foo { x }` instead of `Foo { x: x }`)
+use_field_init_shorthand = true
+
+# Newline style (Unix line endings)
+newline_style = "Unix"
