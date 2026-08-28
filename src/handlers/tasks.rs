@@ -6,9 +6,9 @@ use crate::{
     models::task::{CreateTaskRequest, ListParams, Task, UpdateTaskRequest},
 };
 use axum::{
+    Json,
     extract::{Extension, Path, Query, State},
     http::StatusCode,
-    Json,
 };
 use sqlx::QueryBuilder;
 use uuid::Uuid;

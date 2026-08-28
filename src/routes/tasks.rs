@@ -1,7 +1,7 @@
 use crate::config::AppState;
 use crate::handlers;
 use axum::routing::get;
-use axum::{middleware, Router};
+use axum::{Router, middleware};
 
 pub fn tasks_router(jwt_secret: String) -> Router<AppState> {
     Router::new()
