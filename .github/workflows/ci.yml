@@ -85,6 +85,9 @@ jobs:
 
   audit:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
     steps:
       - uses: actions/checkout@v5
       - uses: rustsec/audit-check@v2
@@ -117,7 +120,7 @@ jobs:
       - name: Run migrations
         run: sqlx database create && sqlx migrate run
       - name: Install cargo-tarpaulin
-        uses: taiki-e/cargo-tarpaulin-action@v2
+        uses: taiki-e/install-action@v2
         with:
           tool: cargo-tarpaulin
       - name: Run coverage
