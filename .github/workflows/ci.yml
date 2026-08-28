@@ -63,7 +63,7 @@ jobs:
       - name: Run migrations
         run: sqlx database create && sqlx migrate run
       - name: Chect that .sqlx query cache is up to date
-        run: sqlx prepare --check --workspace
+        run: cargo sqlx prepare --check --workspace
 
   clippy:
     runs-on: ubuntu-latest
