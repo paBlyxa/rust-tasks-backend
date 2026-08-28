@@ -125,12 +125,31 @@ jobs:
           tool: cargo-tarpaulin
       - name: Run coverage
         run: cargo tarpaulin --workspace --all-features --lib --bins --tests --timeout 120 --out Xml --out Html --output-dir coverage
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+      - name: Extract coverage percentage
+        id: coverage
+        run: |
+          PCT=$(jq '.coverage' coverage/tarpaulin-report.json)
+          PCT_ROUNDED=$(printf "%.1f" "$PCT")
+          echo "percentage=$PCT_ROUNDED" >> "$GITHUB_OUTPUT"
+      - name: Pick bage color
+        id: color
+        run: |
+          PCT=${{ steps.coverage.outputs.percentage }}
+          if (( $(echo "$PCT >= 80" | bc -l) )); then COLOR=brighgreen
+          elif (( $(echo "$PCT >= 50" | bc -l) )); then COLOR=yellow
+          else COLOR=red
+          fi
+          echo "color=$COLOR" >> "$GITHUB_OUTPUT"
+      - name: Update coverage badge gist
+        if: github.ref == 'refs/heads/main'
+        uses: schneegans/dynamic-badges-action@v1.7.0
         with:
-          files: coverage/cobertura.xml
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: c845a62912735c6e5ae03e86740b5163
+          filename: rust-tasks-backend-coverage.json
+          label: coverage
+          message: ${{ steps.coverage.outputs.percentage }}%
+          color: ${{ steps.color.outputs.color }}
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v4
         with:
