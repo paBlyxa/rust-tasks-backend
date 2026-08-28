@@ -1,16 +1,43 @@
 name: CI
-
 on: [push, pull_request]
 
 jobs:
-  test:
+  unit-tests:
     runs-on: ubuntu-latest
     env:
       SQLX_OFFLINE: true
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-      - run: cargo test --all-features
+      - run: cargo test --lib --bins --all-features
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      SQLX_OFFLINE: true
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+      JWT_SECRET: secret
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install sqlx-cli
+        run: cargo install sqlx-cli --no-default-features --features postgres,rustls
+      - name: Run migrations
+        run: sqlx database create && sqlx migrate run
+      - name: Run integration tests
+        run: cargo test --tests --all-features
 
   sqlx-prepare:
     runs-on: ubuntu-latest
@@ -61,3 +88,5 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: rustsec/audit-check@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
