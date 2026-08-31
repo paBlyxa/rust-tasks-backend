@@ -1,6 +1,9 @@
 name: CI
 on: [push, pull_request]
 
+env:
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+
 jobs:
   unit-tests:
     runs-on: ubuntu-latest
@@ -128,12 +131,11 @@ jobs:
       - name: Extract coverage percentage
         id: coverage
         run: |
-          REPORT_FILE=$(find coverage -maxdepth 1 -name '*-coverage.json' | head -n1)
-          if [ -z "$REPORT_FILE" ]; then
-            echo "No tarpaulin JSON report found in coverage/"; ls -la coverage/; exit 1
+          LINE_RATE=$(grep -m1 -oP 'line-rate="\K[0-9.]+' coverage/cobertura.xml)
+          if [ -z "$LINE_RATE" ]; then
+            echo "Could not parse line-rate from cobertura.xml"; cat coverage/cobertura.xml; exit 1
           fi
-          echo "Using $REPORT_FILE"
-          PCT=$(jq '.coverage' "$REPORT_FILE")
+          PCT=$(echo "$LINE_RATE * 100" | bc -l)
           PCT_ROUNDED=$(printf "%.1f" "$PCT")
           echo "percentage=$PCT_ROUNDED" >> "$GITHUB_OUTPUT"
       - name: Pick bage color
