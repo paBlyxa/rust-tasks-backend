@@ -142,7 +142,7 @@ jobs:
         id: color
         run: |
           PCT=${{ steps.coverage.outputs.percentage }}
-          if (( $(echo "$PCT >= 80" | bc -l) )); then COLOR=brighgreen
+          if (( $(echo "$PCT >= 80" | bc -l) )); then COLOR=brightgreen
           elif (( $(echo "$PCT >= 50" | bc -l) )); then COLOR=yellow
           else COLOR=red
           fi
