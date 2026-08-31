@@ -131,7 +131,7 @@ jobs:
       - name: Extract coverage percentage
         id: coverage
         run: |
-          LINE_RATE=$(grep -m1 -oP 'line-rate="\K[0-9.]+' coverage/cobertura.xml)
+          LINE_RATE=$(grep -oP '<coverage[^>]*\bline-rate="\K[0-9.]+' coverage/cobertura.xml | head -n1)
           if [ -z "$LINE_RATE" ]; then
             echo "Could not parse line-rate from cobertura.xml"; cat coverage/cobertura.xml; exit 1
           fi
